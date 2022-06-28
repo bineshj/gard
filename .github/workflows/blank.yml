@@ -1,0 +1,23 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+
+  deploy_to_kubernetes_cluster:
+    #needs: push_docker_image_to_github_packages
+    name: Set Kubernetes Context
+    uses: azure/k8s-set-context@v1
+      with:
+        method: kubeconfig
+        kubeconfig: ${{ secrets.TEST_KUBECONFIG }} # Use secret (https://developer.github.com/actions/managing-workflows/storing-secrets/)
+    run: |
+      kubectl create deployment kubernetes-bootcamp --image=gcr.io/google-samples/kubernetes-bootcamp:v1
